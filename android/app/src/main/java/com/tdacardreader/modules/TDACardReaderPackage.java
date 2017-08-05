@@ -9,8 +9,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Created by Tar on 8/3/17.
+ * company : Iwa Labs (Thailand)
+ * email : tar@iwa.fi
+ */
 
-public class TDAPackage implements ReactPackage {
+public class TDACardReaderPackage implements ReactPackage {
 
     // Wired, if using latest version of react-native : error something
     @Override
@@ -20,7 +25,7 @@ public class TDAPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new TDAModule(reactContext));
+        return Arrays.<NativeModule>asList(new TDACardReaderModule(reactContext));
     }
 
     @Override

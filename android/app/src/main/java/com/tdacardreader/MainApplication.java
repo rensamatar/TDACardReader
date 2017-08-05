@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 // Import our package
-import com.tdacardreader.modules.TDAPackage;
+import com.tdacardreader.modules.TDACardReaderPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -24,7 +24,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-              new TDAPackage()
+              new TDACardReaderPackage()
       );
     }
   };
