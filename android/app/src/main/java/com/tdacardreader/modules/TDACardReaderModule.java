@@ -179,6 +179,11 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
                     isOnReadingCard = false;
                     return;
                 }
+                if (result.compareTo("-14") == 0) {
+                    promise.reject(NO_TDA_SERVICE, "TDA service not start or not found");
+                    isOnReadingCard = false;
+                    return;
+                }
                 if (result.compareTo("-16") == 0) {
                     promise.reject(NO_ID_CARD, "No ID card in card reader");
                     isOnReadingCard = false;
@@ -274,7 +279,7 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
                 } else if (Arrays.equals(result, new byte[]{0x45, (byte) 0xF0})) {
                     error = str + "(Error-16)";
                 }
-                promise.reject(PROMISE_ERROR, error);
+                promise.reject(EXCEPTION, error);
                 isOnReadingCard = false;
                 return;
             }
