@@ -60,7 +60,6 @@ export default class TDACardReader extends Component {
   // Read card
   onReadCard() {
     console.log('onReadText')
-    TDA.show('Read card...', 1000);
     TDA.readCard()
       .then((response) => {
         console.log('__RESPONSE__', response)
@@ -75,7 +74,6 @@ export default class TDACardReader extends Component {
   // Read image
   onReadImage() {
     console.log('onReadImage')
-    TDA.show('Read image...', 1000);
     TDA.readImage()
       .then((response) => {
         console.log('__RESPONSE__', response)
@@ -93,7 +91,6 @@ export default class TDACardReader extends Component {
   // Clear
   onClear() {
     console.log('onClear')
-    TDA.show('Clear data...', 1000);
     TDA.exit().
       then((response) => {
         console.log('__RESPONSE__', response)
@@ -114,8 +111,8 @@ export default class TDACardReader extends Component {
         <Text style={styles.welcome}>
           Welcome to React Native!
         </Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-          <Button style={styles.buttonStyles} title='Load License' onPress={this.onInit} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <Button style={styles.buttonStyles} title='Init License' onPress={this.onInit} />
           <Button style={styles.buttonStyles} title='Read card' onPress={this.onReadCard} />
           <Button style={styles.buttonStyles} title='Read Image' onPress={this.onReadImage} />
           <Button style={styles.buttonStyles} title='Clear' onPress={this.onClear} />
@@ -128,9 +125,14 @@ export default class TDACardReader extends Component {
             </View>
             <View style={{ width: 100 }}>
               <Text>Image :</Text>
-              <Image source={{ uri: this.state.base64ImageData }} style={{ marginTop: 10, height: 100, width: 100 }} />
+              {
+                (this.state.base64ImageData == null ?
+                  <Image source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} style={{ marginTop: 10, height: 100, width: 100 }} /> :
+                  <Image source={{ uri: this.state.base64ImageData }} style={{ marginTop: 10, height: 100, width: 100 }} />
+                )
+              }
               <Text>Base 64:</Text>
-              <Text><Text>{this.state.base64Text}</Text></Text>
+              <Text numberOfLines={6} ellipsizeMode={'tail'}>{this.state.base64Text}</Text>
             </View>
           </View>
         </View>
@@ -141,6 +143,8 @@ export default class TDACardReader extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    paddingHorizontal: 5,
     backgroundColor: '#F5FCFF',
   },
   welcome: {
@@ -151,12 +155,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   buttonStyles: {
-    width: 200,
     height: 80,
     marginTop: 8,
     marginBottom: 10,
     backgroundColor: '#dddddd',
-    padding: 10
+    marginHorizontal: 5
   }
 });
 

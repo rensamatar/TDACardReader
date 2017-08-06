@@ -107,13 +107,16 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
                 if (!canDownloadLicense()) {
                     promise.reject(DOWNLOAD_LICENSE_FAILED, "Failed to download license for this reader. Please contact R&D Computer System Co., Ltd");
                 }
-            } else if (check.compareTo("-12") == 0) {
+                return;
+            }
+            if (check.compareTo("-12") == 0) {
                 promise.reject(NO_LICENSE, "License file not found or broken");
 
                 // Download or update license
                 if (!canDownloadLicense()) {
                     promise.reject(DOWNLOAD_LICENSE_FAILED, "Failed to download license for this reader. Please contact R&D Computer System Co., Ltd");
                 }
+                return;
             }
 
             // Hide all notification bar
@@ -136,10 +139,6 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void readCard(Promise promise) {
 
-        if (!Utils.isOnline(getReactApplicationContext())) {
-            promise.reject(NO_INTERNET, "No internet connection");
-        }
-
         if (!tda.isPackageInstalled(getReactApplicationContext())) {
             promise.reject(NO_TDA_SERVICE, "TDA service not install on device");
             return;
@@ -150,35 +149,39 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
             tda = new TDA(getReactApplicationContext());
         }
 
-//        if (isOnReadingCard) {
-//            promise.reject(READING_CARD, "Reading card...");
-//            return;
-//        }
+        if (isOnReadingCard) {
+            promise.reject(READING_CARD, "Reading card in progress...");
+            return;
+        }
 
         String result;
+        isOnReadingCard = true;
 
         try {
 
             if (isHasLicense()) {
                 // Reading text data from card
                 result = tda.nidTextTA("0");
-                isOnReadingCard = true;
 
                 // Check if un-registered card reader
                 if (result.compareTo("-2") == 0) {
-                    promise.reject(INVALID_LICENSE, "[Invalid license file");
+                    promise.reject(INVALID_LICENSE, "Invalid license file");
+                    isOnReadingCard = false;
                     return;
                 }
                 if (result.compareTo("-3") == 0) {
                     promise.reject(CARD_READER_NOT_FOUND, "Card reader not found");
+                    isOnReadingCard = false;
                     return;
                 }
                 if (result.compareTo("-11") == 0) {
                     promise.reject(CARD_READER_NOT_RESPONSE, "Card reader not response or not found");
+                    isOnReadingCard = false;
                     return;
                 }
                 if (result.compareTo("-16") == 0) {
                     promise.reject(NO_ID_CARD, "No ID card in card reader");
+                    isOnReadingCard = false;
                     return;
                 }
             } else {
@@ -192,7 +195,7 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
             }
 
             Log.d(TAG, "TDA result text : " + result);
-            // Return promise data..
+
             promise.resolve(result);
             isOnReadingCard = false;
 
@@ -206,10 +209,6 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void readImage(Promise promise) {
 
-        if (!Utils.isOnline(getReactApplicationContext())) {
-            promise.reject(NO_INTERNET, "No internet connection");
-        }
-
         if (!tda.isPackageInstalled(getReactApplicationContext())) {
             promise.reject(NO_TDA_SERVICE, "TDA service not install on device");
             return;
@@ -220,10 +219,10 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
             tda = new TDA(getReactApplicationContext());
         }
 
-//        if (isOnReadingCard) {
-//            promise.reject(READING_CARD, "Reading card...");
-//            return;
-//        }
+        if (isOnReadingCard) {
+            promise.reject(READING_CARD, "Reading card...");
+            return;
+        }
 
         byte[] result;
         Bitmap bitmap;
@@ -280,15 +279,10 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
                 return;
             }
 
-            str = Utils.bytesToHex(result);
-            if (str.length() > 30) {
-                str = str.substring(0, 31) + "...";
-            }
-            Log.d(TAG, "Byte to Hex photo " + str);
-
             String base64Data = Base64.encodeToString(result, Base64.NO_WRAP);
             promise.resolve(base64Data);
             isOnReadingCard = false;
+
         } catch (Exception e) {
             isOnReadingCard = false;
             promise.reject(EXCEPTION, e.getMessage());
@@ -314,6 +308,7 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
 
         if (!Utils.isOnline(getReactApplicationContext())) {
             Toast.makeText(getReactApplicationContext(), "No internet connection", Toast.LENGTH_LONG).show();
+            return false;
         }
 
         if (tda == null) {
