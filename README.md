@@ -22,16 +22,18 @@ yarn install
 react-native link
 react-native run-android
 ```
-And install TDAService.apk to android device. You can download from Google play service..
+And install TDAService.apk to android device. You can download from Google play service.
 Because it need from TDA library.
 
 ## Running the tests
 
 You can run the app and test..
 
-Click `Install license` and this will download license file. After prepare card reader message show
+Click `Install license` and this will download license file.
+After prepare card reader message show
 Connect the reader to device and click `Read card` then we will see the result text.
-Click `Read image` will load Base64 string and convert to image file. If click `Clear` it should stop the TDAService and clear the result data.
+Click `Read image` will load Base64 string and convert to image file.
+If click `Clear` it should stop the TDAService and clear the result data.
 
 ### Methods
 
@@ -71,14 +73,6 @@ Exit the service
 
 ```
 TDA.exit().then({...}).catch({...})
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
 ```
 
 ## Deployment
