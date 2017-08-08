@@ -3,6 +3,12 @@ package com.tdacardreader.modules;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.ArrayMap;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableArray;
+
+import java.util.ArrayList;
 
 /**
  * Created by Tar on 8/3/17.
@@ -43,5 +49,29 @@ public class Utils {
             }
         }
         return new String(hexChars);
+    }
+
+    public static ArrayList<String> convertStringToArray(String string) {
+        String[] stringArray = null;
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        if (string != null) {
+            stringArray = string.split("#");
+            for (String s : stringArray) {
+                stringArrayList.add(s.trim());
+            }
+        }
+        return stringArrayList;
+    }
+
+    public static WritableArray convertStringToWritableArray(String string) {
+        String[] stringArray;
+        WritableArray writableArray = Arguments.createArray();
+        if (string != null) {
+            stringArray = string.split("#");
+            for (String s : stringArray) {
+                writableArray.pushString(s.trim());
+            }
+        }
+        return writableArray;
     }
 }

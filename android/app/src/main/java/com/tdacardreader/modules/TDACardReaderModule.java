@@ -1,10 +1,12 @@
 package com.tdacardreader.modules;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 
 import android.graphics.Bitmap;
@@ -12,6 +14,8 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -201,7 +205,10 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
 
             Log.d(TAG, "TDA result text : " + result);
 
-            promise.resolve(result);
+            WritableMap map = Arguments.createMap();
+            map.putArray("data", Utils.convertStringToWritableArray(result));
+            promise.resolve(map);
+
             isOnReadingCard = false;
 
         } catch (Exception e) {
@@ -285,7 +292,10 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
             }
 
             String base64Data = Base64.encodeToString(result, Base64.NO_WRAP);
-            promise.resolve(base64Data);
+            WritableMap map = Arguments.createMap();
+            map.putString("data", base64Data);
+            promise.resolve(map);
+
             isOnReadingCard = false;
 
         } catch (Exception e) {
