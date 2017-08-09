@@ -41,6 +41,7 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
     private static final String NO_ID_CARD = "no-id-card";
     private static final String CARD_READER_NOT_FOUND = "card-reader-not-found";
     private static final String CARD_READER_NOT_RESPONSE = "card-reader-not-response";
+    private static final String CARD_READER_NOT_CONNECT = "card-reader-not-connect";
     private static final String READING_CARD = "reading-card";
     private static final String EXCEPTION = "exception-error";
 
@@ -130,7 +131,7 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
             String result = tda.readerTA("2");
             // 02 = Card present
             if (result.compareTo("02") == 0) {
-                Toast.makeText(getReactApplicationContext(), "Prepare card reader", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getReactApplicationContext(), "Prepare card reader", Toast.LENGTH_SHORT).show();
             }
 
             promise.resolve(DOWNLOAD_LICENSE_SUCCESS);
@@ -175,6 +176,11 @@ public class TDACardReaderModule extends ReactContextBaseJavaModule {
                 }
                 if (result.compareTo("-3") == 0) {
                     promise.reject(CARD_READER_NOT_FOUND, "Card reader not found");
+                    isOnReadingCard = false;
+                    return;
+                }
+                if (result.compareTo("-4") == 0) {
+                    promise.reject(CARD_READER_NOT_CONNECT, "Card reader not connect to ID card");
                     isOnReadingCard = false;
                     return;
                 }
